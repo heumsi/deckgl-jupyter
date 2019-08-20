@@ -1,0 +1,17 @@
+<html>
+
+<head>
+  <script src="https://unpkg.com/deck.gl@~7.0.0/dist.min.js"></script>
+
+  <!-- only if base map is needed -->
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js"></script>
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="container" style="width: 100vw; height: 100vh;"></div>
+</body>
+<!-- main map creation code, extended by mapboxgl/templates/{{ viz }}.html -->
+<script type="text/javascript">{% block javascript %}{% endblock javascript %}</script>
+
+</html>

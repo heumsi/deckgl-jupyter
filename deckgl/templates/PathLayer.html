@@ -1,0 +1,26 @@
+{% extends "layer.html" %}
+{% block layer %}
+    
+    layers: [
+        new deck.PathLayer({
+            'id': 'PathLayer',
+            'data': {{ data }},
+            'pickable': {{pickable}},
+            // Styles
+            'widthScale': {{ widthScale }},
+            'widthMinPixels': {{ widthMinPixels }},
+            'widthMaxPixels': {{ widthMaxPixels }},
+            'rounded': {{ rounded }},
+            'billboard': {{ billboard }},
+            'miterLimit': {{ miterLimit }},
+            'dashJustified': {{ dashJustified }},
+            'getPath': d => d.path,
+            'getColor': d => colorToRGBArray(d.color),
+            'getWidth': d => {{ width }},
+            //'onHover': ({object, x, y}) => {
+            //    const tooltip = object.name
+            //}
+        })
+    ]
+    
+{% endblock layer %}

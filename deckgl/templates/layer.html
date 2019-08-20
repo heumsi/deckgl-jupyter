@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block map %}
+
+    const deckgl = new deck.DeckGL({
+
+        container: 'container',
+        mapboxApiAccessToken: {{ accessToken }},
+        latitude: {{ center[0] }},
+        longitude: {{ center[1] }},
+        zoom: {{ zoom }},
+        bearing: {{ bearing }},
+        pitch: {{ pitch }},
+        mapStyle: {{ style }},
+          
+        {% block layer %}
+        {% endblock layer %}
+    })
+
+{% endblock map %}
