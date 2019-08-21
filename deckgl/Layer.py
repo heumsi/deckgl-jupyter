@@ -11,21 +11,30 @@ MAX_SAFE_INTEGER = 9007199254740991
 
 class Base(MapViz):
 
-    def __init__(self, data, *args, **kwargs):
+    def __init__(self, 
+                 data, 
+                 pickable=False,
+                 onHover=None,
+                 onClick=None,
+                 visible=True,
+                 opacity=1,
+                 frame_width = '100%',
+                 frame_height = '500px',
+                 *args, **kwargs):
         super(Base, self).__init__(data, *args, **kwargs)
-        self.frame_width = '100%'
-        self.frame_height = '500px'
+        self.frame_width = frame_width
+        self.frame_height = frame_height
 
         self.layerName = 'Base'
         self.defaultProps = {}
-        
-        self.interactive = False
+
         self.id = self.layerName
         self.data = data
-        self.visible = True
-        self.pickable = False
-        self.onHover = None
-        self.onClick = None
+        self.visible = visible
+        self.opacity = opacity
+        self.pickable = pickable
+        self.onHover = onHover
+        self.onClick = onClick
 
     def get_options(self):
         return dict(
@@ -169,6 +178,60 @@ class PathLayer(Base):
             miterLimit=self.miterLimit,
             dashJustified=self.dashJustified,
             tooltip=self.tooltip
+        )
+        options = self.make_str(options)
+        return templates.format(self.template, **options)
+
+class TripsLayer(PathLayer):
+    
+    def __init__(self, 
+                 data, 
+                 currentTime=0,
+                 trailLength=120,
+                 width=1,
+                 widthUnits=1,
+                 widthScale=1,
+                 widthMinPixels=0,
+                 widthMaxPixels=MAX_SAFE_INTEGER,
+                 rounded=False,
+                 billboard=False,
+                 miterLimit=4,
+                 dashJustified=False,
+                 tooltip='object.name',
+                 *args, 
+                 **kwargs):
+        super(TripsLayer, self).__init__(data, 
+                                        width=width,
+                                        widthUnits=widthUnits,
+                                        widthScale=widthScale,
+                                        widthMinPixels=widthMinPixels,
+                                        widthMaxPixels=widthMaxPixels,
+                                        rounded=rounded,
+                                        billboard=billboard,
+                                        miterLimit=miterLimit,
+                                        dashJustified=dashJustified,
+                                        *args, **kwargs)
+
+        self.template = 'TripsLayer'
+        self.currentTime = currentTime
+        self.trailLength = trailLength
+
+    def create_html(self, filename=None):
+        options = super().get_options()
+        options.update(
+            width=self.width,
+            widthUnits=self.widthUnits,
+            widthScale=self.widthScale,
+            widthMinPixels=self.widthMinPixels,
+            widthMaxPixels=self.widthMaxPixels,
+            rounded=self.rounded,
+            billboard=self.billboard,
+            miterLimit=self.miterLimit,
+            dashJustified=self.dashJustified,
+            tooltip=self.tooltip,
+            # Added.
+            currentTime = self.currentTime,
+            trailLength = self.trailLength
         )
         options = self.make_str(options)
         return templates.format(self.template, **options)

@@ -1,0 +1,33 @@
+{% extends "layer.html" %}
+{% block layer %}
+    
+    layers: [
+        new deck.TripsLayer({
+            'id': 'TripsLayer',
+            'data': {{ data }},
+            'pickable': {{pickable}},
+            // Styles
+            // PathLayer (inherited)
+            'widthScale': {{ widthScale }},
+            'widthMinPixels': {{ widthMinPixels }},
+            'widthMaxPixels': {{ widthMaxPixels }},
+            'rounded': {{ rounded }},
+            'billboard': {{ billboard }},
+            'miterLimit': {{ miterLimit }},
+            'dashJustified': {{ dashJustified }},
+            'getColor': d => colorToRGBArray(d.color),
+            'getWidth': d => {{ width }},
+            'onHover': ({object, x, y}) => {
+                const tooltip = object.name
+            },
+            // TripsLayer Added.
+            getPath: d => d.segments, 
+            //getPath: d => d.waypoints.map(p => p.coordinates),
+            //getTimestamps: d => d.waypoints.map(p => p.timestamp),
+            opacity: {{ opacity }},
+            trailLength: {{ trailLength }},
+            currentTime: {{ currentTime }}
+        })
+    ]
+    
+{% endblock layer %}
