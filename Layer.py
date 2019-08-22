@@ -3,16 +3,17 @@ import json
 
 from IPython.core.display import HTML, display
 
-from deckgl import templates
+import templates
 from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
 MAX_SAFE_INTEGER = 9007199254740991
 
-class Base(MapViz):
+class Map(MapViz):
 
     def __init__(self, 
-                 data, 
+                 data=None, 
+                 id='Map',
                  pickable=False,
                  onHover=None,
                  onClick=None,
@@ -21,24 +22,28 @@ class Base(MapViz):
                  frame_width = '100%',
                  frame_height = '500px',
                  *args, **kwargs):
-        super(Base, self).__init__(data, *args, **kwargs)
+        super(Map, self).__init__(data, *args, **kwargs)
         self.frame_width = frame_width
         self.frame_height = frame_height
 
-        self.layerName = 'Base'
+        self.template = 'map'
         self.defaultProps = {}
 
-        self.id = self.layerName
         self.data = data
+        self.id = id
         self.visible = visible
         self.opacity = opacity
         self.pickable = pickable
         self.onHover = onHover
         self.onClick = onClick
+        self.layers = []
+
+    def add(self, layer):
+        self.layers.append(layer)
 
     def get_options(self):
         return dict(
-            # Mapbox options
+            # Mapbox options.
             accessToken=self.access_token,
             div_id=self.div_id,
             style=self.style,
@@ -65,7 +70,7 @@ class Base(MapViz):
             scaleFillColor=self.scale_background_color,
             scaleTextColor=self.scale_text_color,
 
-            # DeckGL
+            # DeckGL options.
             data = self.data,
             id = self.id,
             visible = self.visible,
@@ -81,7 +86,8 @@ class Base(MapViz):
                     div_id=self.div_id,
                     srcdoc=srcdoc,
                     width=self.frame_width,
-                    height=self.frame_height))
+                    height=self.frame_height
+                ))
 
     def make_str(self, options):
         for k, v in options.items():
@@ -91,10 +97,38 @@ class Base(MapViz):
                 options[k] = json.dumps(v)
         return options
 
-class ArcLayer(Base):
+    def create_html(self, filename=None):
+
+        # Create layer html
+        layer_html = ''
+        for layer in self.layers:
+            options = layer.get_options()
+            options = self.make_str(options)
+            html = templates.format(layer.template, **options)
+            layer_html += ', ' + html
+
+        # Create base html
+        options = self.get_options()
+        options = self.make_str(options)
+        options['layers'] = layer_html
+
+        html = templates.format(self.template, **options)
+        return html
+
+    def show(self, **kwargs):
+        # Load the HTML iframe
+        html = self.create_html(**kwargs)
+        map_html = self.as_iframe(html)
+
+        # Display the iframe in the current jupyter notebook view
+        display(HTML(map_html))
+
+
+class ArcLayer(Map):
     
     def __init__(self, 
-                 data, 
+                 data,
+                 id='ArcLayer',
                  source_color=[0, 0, 0, 255],
                  target_color=[0, 0, 0, 255],
                  width=1,
@@ -106,7 +140,7 @@ class ArcLayer(Base):
                  tilt=0,
                  *args, 
                  **kwargs):
-        super(ArcLayer, self).__init__(data, *args, **kwargs)
+        super(ArcLayer, self).__init__(data, id, *args, **kwargs)
 
         self.template = 'ArcLayer'
         self.source_color = source_color
@@ -119,9 +153,9 @@ class ArcLayer(Base):
         self.height = height
         self.tilt = tilt
 
-    def create_html(self, filename=None):
-        options = super().get_options()
-        options.update(
+    def get_options(self):
+        return dict(
+            data=self.data,
             source_color=self.source_color,
             target_color=self.target_color,
             width=self.width,
@@ -131,14 +165,13 @@ class ArcLayer(Base):
             widthMaxPixels=self.widthMaxPixels,
             height=self.height,
             tilt=self.tilt
-        )
-        options = self.make_str(options)
-        return templates.format(self.template, **options)
+        )  
 
-class PathLayer(Base):
+class PathLayer(Map):
     
     def __init__(self, 
-                 data, 
+                 data,
+                 id='PathLayer',
                  width=1,
                  widthUnits=1,
                  widthScale=1,
@@ -151,7 +184,7 @@ class PathLayer(Base):
                  tooltip='object.name',
                  *args, 
                  **kwargs):
-        super(PathLayer, self).__init__(data, *args, **kwargs)
+        super(PathLayer, self).__init__(data, id, *args, **kwargs)
 
         self.template = 'PathLayer'
         self.width = width
@@ -165,9 +198,8 @@ class PathLayer(Base):
         self.dashJustified = dashJustified
         self.tooltip = tooltip
 
-    def create_html(self, filename=None):
-        options = super().get_options()
-        options.update(
+    def get_options(self):
+        return dict(
             width=self.width,
             widthUnits=self.widthUnits,
             widthScale=self.widthScale,
@@ -179,13 +211,12 @@ class PathLayer(Base):
             dashJustified=self.dashJustified,
             tooltip=self.tooltip
         )
-        options = self.make_str(options)
-        return templates.format(self.template, **options)
 
 class TripsLayer(PathLayer):
     
     def __init__(self, 
-                 data, 
+                 data,
+                 id='TripsLayer',
                  currentTime=0,
                  trailLength=120,
                  width=1,
@@ -201,6 +232,7 @@ class TripsLayer(PathLayer):
                  *args, 
                  **kwargs):
         super(TripsLayer, self).__init__(data, 
+                                        id=id,
                                         width=width,
                                         widthUnits=widthUnits,
                                         widthScale=widthScale,
@@ -216,25 +248,13 @@ class TripsLayer(PathLayer):
         self.currentTime = currentTime
         self.trailLength = trailLength
 
-    def create_html(self, filename=None):
+    def get_options(self):
         options = super().get_options()
         options.update(
-            width=self.width,
-            widthUnits=self.widthUnits,
-            widthScale=self.widthScale,
-            widthMinPixels=self.widthMinPixels,
-            widthMaxPixels=self.widthMaxPixels,
-            rounded=self.rounded,
-            billboard=self.billboard,
-            miterLimit=self.miterLimit,
-            dashJustified=self.dashJustified,
-            tooltip=self.tooltip,
-            # Added.
             currentTime = self.currentTime,
             trailLength = self.trailLength
         )
-        options = self.make_str(options)
-        return templates.format(self.template, **options)
+        return options
 
 """
 class GPUGridLayer(Base):

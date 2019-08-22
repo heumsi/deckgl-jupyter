@@ -12,9 +12,7 @@
         bearing: {{ bearing }},
         pitch: {{ pitch }},
         mapStyle: {{ style }},
-          
-        {% block layer %}
-        {% endblock layer %}
+        layers: [{{ layers }}]
     })
 
 {% endblock map %}

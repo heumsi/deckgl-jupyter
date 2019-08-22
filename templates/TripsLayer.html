@@ -2,11 +2,12 @@
 {% block layer %}
     
     layers: [
-        new deck.PathLayer({
-            'id': 'PathLayer',
+        new deck.TripsLayer({
+            'id': 'TripsLayer',
             'data': {{ data }},
-            'pickable': {{pickable}},
+            'pickable': {{ pickable }},
             // Styles
+            // PathLayer (inherited)
             'widthScale': {{ widthScale }},
             'widthMinPixels': {{ widthMinPixels }},
             'widthMaxPixels': {{ widthMaxPixels }},
@@ -14,12 +15,16 @@
             'billboard': {{ billboard }},
             'miterLimit': {{ miterLimit }},
             'dashJustified': {{ dashJustified }},
-            'getPath': d => d.path,
             'getColor': d => colorToRGBArray(d.color),
             'getWidth': d => {{ width }},
-            //'onHover': ({object, x, y}) => {
-            //    const tooltip = object.name
-            //}
+            'onHover': ({object, x, y}) => {
+                const tooltip = object.name
+            },
+            // TripsLayer Added.
+            getPath: d => d.segments,
+            opacity: {{ opacity }},
+            trailLength: {{ trailLength }},
+            currentTime: {{ currentTime }}
         })
     ]
     

@@ -1,0 +1,17 @@
+new deck.ArcLayer({
+    'id': 'ArcLayer',
+    'data': {{ data }},
+    // Styles
+    'widthUnits': {{ widthUnits }},
+    'widthScale': {{ widthScale }},
+    'widthMinPixels': {{ widthMinPixels }},
+    'widthMaxPixels': {{ widthMaxPixels }},
+    'getSourcePosition': d => d.from.coordinates,
+    'getTargetPosition': d => d.to.coordinates,
+    'getSourceColor': {{ source_color }},
+    'getTargetColor': {{ target_color }},
+    'getWidth': {{ width }},
+    'getHeight': {{ height }},
+    'getTilt': {{ tilt }}
+})
+
