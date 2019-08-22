@@ -8,6 +8,14 @@ from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
 MAX_SAFE_INTEGER = 9007199254740991
+DEFAULT_COLOR_MAP = [
+    [255,255,178],
+    [254,217,118],
+    [254,178,76],
+    [253,141,60],
+    [240,59,32],
+    [189,0,38]
+]
 
 class Map(MapViz):
 
@@ -95,6 +103,8 @@ class Map(MapViz):
                 options[k] = "'{}'".format(v)
             elif isinstance(v, bool):
                 options[k] = json.dumps(v)
+            elif v is None:
+                options[k] = json.dumps('null')
         return options
 
     def create_html(self, filename=None):
@@ -312,58 +322,47 @@ class ScatterplotLayer(Map):
             getLineColor=self.getLineColor
         )  
 
-"""
-class GPUGridLayer(Base):
 
-    def __init__(self,
-                 data,
-                 extruded=True,
+class CPUGridLayer(Map):
+
+    def __init__(self, 
+                 data, 
+                 id='CPUGridLayer', 
                  cellSize=1000,
-                 tooltip=None,
-                 colorRange=['#ffffb2','#fed976','#feb24c','#fd8d3c','#f03b20','#bd0026'],
+                 colorRange=DEFAULT_COLOR_MAP,
                  coverage=1,
-                 #elevationDomain=,
+                 elevationDomain=None,
                  elevationRange=[0, 1000],
                  elevationScale=1,
+                 extruded=True,
                  fp64=False,
-                 gpuAggregation=True,
-                 #getColorWeight=,
-                 #colorAggregation=,
-                 #getElevationWeight=,
-                 #elevationAggregation=,
-                 *args,
+                 gpuAggregation=True,  
+                 *args, 
                  **kwargs):
-        super(GPUGridLayer, self).__init__(data, *args, **kwargs)
-        self.template = 'GPUGridLayer'
-        self.extruded = extruded
-        self.cellSize = cellSize
-        self.tooltip = tooltip
-        self.colorRange = colorRange
-        self.coverage = coverage
-        #self.elevationDomain = elevationDomain
-        self.elevationRange = elevationRange,
-        self.elevationScale = elevationScale
-        self.fp64 = fp64
-        self.gpuAggregation = gpuAggregation
-        #self.getColorWeight = getColorWeight
-        #self.colorAggregation = colorAggregation
-        #self.getElevationWeight = getElevationWeight
-        #self.elevationAggregation = elevationAggregation
+        super(CPUGridLayer, self).__init__(data, id, *args, **kwargs)
+        self.template = 'CPUGridLayer'
 
-    def create_html(self, filename=None):
-        options = super().get_options()
-        options.update(
-            extruded = self.extruded,
-            cellSize = self.cellSize,
-            tooltip=self.tooltip,
-            elevationScale=self.elevationScale,
+        self.cellSize=cellSize
+        self.colorRange=colorRange
+        self.coverage=coverage
+        self.elevationDomain=elevationDomain
+        self.elevationRange=elevationRange
+        self.elevationScale=elevationScale
+        self.extruded=extruded
+        self.fp64=fp64
+        self.gpuAggregation=gpuAggregation  
+
+    def get_options(self):
+        return dict(
+            data=self.data,
+            id=self.id,
+            cellSize=self.cellSize,
             colorRange=self.colorRange,
             coverage=self.coverage,
+            elevationDomain=self.elevationDomain,
             elevationRange=self.elevationRange,
             elevationScale=self.elevationScale,
+            extruded=self.extruded,
             fp64=self.fp64,
-            gpuAggregation=self.gpuAggregation
-        )
-        options = self.make_str(options)
-        return templates.format(self.template, **options)
-"""
+            gpuAggregation=self.gpuAggregation  
+        )  
