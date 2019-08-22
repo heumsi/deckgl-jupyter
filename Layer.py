@@ -322,6 +322,34 @@ class ScatterplotLayer(Map):
             getLineColor=self.getLineColor
         )  
 
+class GridCellLayer(Map):
+
+    def __init__(self, 
+                 data, 
+                 id='GridCellLayer', 
+                 cellSize=1000,
+                 coverage=1,
+                 elevationScale=1,
+                 extruded=True,
+                 *args, 
+                 **kwargs):
+        super(GridCellLayer, self).__init__(data, id, *args, **kwargs)
+        self.template = 'GridCellLayer'
+
+        self.cellSize=cellSize
+        self.coverage=coverage
+        self.elevationScale=elevationScale
+        self.extruded=extruded
+
+    def get_options(self):
+        return dict(
+            data=self.data,
+            id=self.id,
+            cellSize=self.cellSize,
+            coverage=self.coverage,
+            elevationScale=self.elevationScale,
+            extruded=self.extruded,
+        )  
 
 class CPUGridLayer(Map):
 

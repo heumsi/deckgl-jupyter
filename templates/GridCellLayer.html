@@ -1,0 +1,10 @@
+new deck.GridCellLayer({
+    id: {{ id }},
+    data: {{ data }},
+    extruded: {{ extruded }},
+    cellSize: {{ cellSize }},
+    coverage: {{ coverage }},
+    elevationScale: {{ elevationScale }},
+    getPosition: d => d.coordinates,
+    getElevation: d => d.value
+})
