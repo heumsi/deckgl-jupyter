@@ -105,7 +105,7 @@ class Map(MapViz):
             options = layer.get_options()
             options = self.make_str(options)
             html = templates.format(layer.template, **options)
-            layer_html += ', ' + html
+            layer_html += html + ','
 
         # Create base html
         options = self.get_options()
@@ -156,6 +156,7 @@ class ArcLayer(Map):
     def get_options(self):
         return dict(
             data=self.data,
+            id=self.id,
             source_color=self.source_color,
             target_color=self.target_color,
             width=self.width,
@@ -200,6 +201,8 @@ class PathLayer(Map):
 
     def get_options(self):
         return dict(
+            data=self.data,
+            id=self.id,
             width=self.width,
             widthUnits=self.widthUnits,
             widthScale=self.widthScale,
@@ -255,6 +258,59 @@ class TripsLayer(PathLayer):
             trailLength = self.trailLength
         )
         return options
+
+class ScatterplotLayer(Map):
+
+    def __init__(self, 
+                 data, 
+                 id='ScatterplotLayer', 
+                 radius=10,
+                 radiusScale=1,
+                 lineWidthUnits='meters',
+                 lineWdithScale=1,
+                 stroked=False,
+                 filled=True,
+                 radiusMinPixels=0,
+                 radiusMaxPixels=0,
+                 lineWidthMinPixels=0,
+                 lineWidthMaxPixels=MAX_SAFE_INTEGER,
+                 getFillColor=[255, 140, 0],
+                 getLineColor=[0, 0, 0],
+                 *args, 
+                 **kwargs):
+        super(ScatterplotLayer, self).__init__(data, id, *args, **kwargs)
+        self.template = 'ScatterplotLayer'
+
+        self.radius = radius
+        self.radiusScale = radiusScale
+        self.lineWidthUnits = lineWidthUnits
+        self.lineWdithScale = lineWdithScale
+        self.stroked = stroked
+        self.filled = filled
+        self.radiusMinPixels = radiusMinPixels
+        self.radiusMaxPixels = radiusMaxPixels
+        self.lineWidthMinPixels = lineWidthMinPixels
+        self.lineWidthMaxPixels = lineWidthMaxPixels
+        self.getFillColor = getFillColor
+        self.getLineColor = getLineColor
+
+    def get_options(self):
+        return dict(
+            data=self.data,
+            id=self.id,
+            radius=self.radius,
+            radiusScale=self.radiusScale,
+            lineWidthUnits=self.lineWidthUnits,
+            lineWdithScale=self.lineWdithScale,
+            stroked=self.stroked,
+            filled=self.filled,
+            radiusMinPixels=self.radiusMinPixels,
+            radiusMaxPixels=self.radiusMaxPixels,
+            lineWidthMinPixels=self.lineWidthMinPixels,
+            lineWidthMaxPixels=self.lineWidthMaxPixels,
+            getFillColor=self.getFillColor,
+            getLineColor=self.getLineColor
+        )  
 
 """
 class GPUGridLayer(Base):

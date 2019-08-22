@@ -1,0 +1,18 @@
+new deck.ScatterplotLayer({
+    'id': {{ id }},
+    'data': {{ data }},
+    'radiusScale': {{ radiusScale }},
+    'lineWidthUnits': {{ lineWidthUnits }},
+    'lineWdithScale': {{ lineWdithScale }},
+    'stroked': {{ stroked }},
+    'filled': {{ filled }},
+    'radiusMinPixels': {{ radiusMinPixels }},
+    'radiusMaxPixels': {{ radiusMaxPixels }},
+    'lineWidthMinPixels': {{ lineWidthMinPixels }},
+    'lineWidthMaxPixels': {{ lineWidthMaxPixels }},
+    'getPosition': d => d.coordinates,
+    'getRadius': d => {{ radius }},
+    'getFillColor': d => {{ getFillColor }},
+    'getLineColor': d => {{ getLineColor }},
+})
+
