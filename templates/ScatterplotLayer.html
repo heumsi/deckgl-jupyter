@@ -1,6 +1,5 @@
 new deck.ScatterplotLayer({
-    'id': {{ id }},
-    'data': {{ data }},
+    // ScatterplotLayer Added.
     'radiusScale': {{ radiusScale }},
     'lineWidthUnits': {{ lineWidthUnits }},
     'lineWdithScale': {{ lineWdithScale }},
@@ -10,9 +9,28 @@ new deck.ScatterplotLayer({
     'radiusMaxPixels': {{ radiusMaxPixels }},
     'lineWidthMinPixels': {{ lineWidthMinPixels }},
     'lineWidthMaxPixels': {{ lineWidthMaxPixels }},
-    'getPosition': d => d.coordinates,
-    'getRadius': d => {{ radius }},
-    'getFillColor': d => {{ getFillColor }},
-    'getLineColor': d => {{ getLineColor }},
+    'getPosition': {{ getPosition }},
+    'getRadius': {{ getRadius }},
+    'getColor': {{ getColor }},
+    'getFillColor': {{ getFillColor }},
+    'getLineColor': {{ getLineColor }},
+    'getLineWidth': {{ getLineWidth }},
+
+    // MapLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': ({object, x, y}) => {
+        const tooltip = {{ tooltip }}
+    },
+    'onClick' : {{ onClick }},
+    'onDragStart' : {{ onDragStart }},
+    'onDrag' : {{ onDrag }},
+    'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
 })
 

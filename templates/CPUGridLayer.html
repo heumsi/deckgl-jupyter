@@ -1,2 +1,26 @@
+new deck.CPUGridLayer({
+    id: {{ id }},
+    gpuAggregation: {{ gpuAggregation }},
+    data: {{ data }},
+    extruded: {{ extruded }},
+    cellSize: {{ cellSize }},
+    elevationScale: {{ elevationScale }},
+    getPosition: d => d.coordinates,
 
-new deck.CPUGridLayer({})
+    // MapLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': ({object, x, y}) => {
+        const tooltip = {{ tooltip }}
+    },
+    'onClick' : {{ onClick }},
+    'onDragStart' : {{ onDragStart }},
+    'onDrag' : {{ onDrag }},
+    'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
+})

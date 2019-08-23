@@ -1,17 +1,32 @@
 new deck.ArcLayer({
-    'id': 'ArcLayer',
-    'data': {{ data }},
-    // Styles
+    // ArcLayer Added.
     'widthUnits': {{ widthUnits }},
     'widthScale': {{ widthScale }},
     'widthMinPixels': {{ widthMinPixels }},
     'widthMaxPixels': {{ widthMaxPixels }},
-    'getSourcePosition': d => d.from.coordinates,
-    'getTargetPosition': d => d.to.coordinates,
-    'getSourceColor': {{ source_color }},
-    'getTargetColor': {{ target_color }},
-    'getWidth': {{ width }},
-    'getHeight': {{ height }},
-    'getTilt': {{ tilt }}
+    'getSourcePosition': {{ getSourcePosition }},
+    'getTargetPosition': {{ getTargetPosition }},
+    'getSourceColor': {{ getSourceColor }},
+    'getTargetColor': {{ getTargetColor }},
+    'getWidth': {{ getWidth }},
+    'getHeight': {{ getHeight }},
+    'getTilt': {{ getTilt }},
+    
+    // MapLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': ({object, x, y}) => {
+        const tooltip = {{ tooltip }}
+    },
+    //'onClick' : {{ onClick }},
+    //'onDragStart' : {{ onDragStart }},
+    //'onDrag' : {{ onDrag }},
+    //'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
 })
 

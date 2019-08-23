@@ -1,10 +1,27 @@
 new deck.GridCellLayer({
-    id: {{ id }},
-    data: {{ data }},
+    // GridCellLayer Added.
     extruded: {{ extruded }},
     cellSize: {{ cellSize }},
     coverage: {{ coverage }},
     elevationScale: {{ elevationScale }},
-    getPosition: d => d.coordinates,
-    getElevation: d => d.value
+    getPosition: {{ getPosition }},
+    getColor: {{ getColor }},
+    getElevation: {{ getElevation }},
+
+    // MapLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': ({object, x, y}) => {
+        const tooltip = {{ tooltip }}
+    },
+    'onClick' : {{ onClick }},
+    'onDragStart' : {{ onDragStart }},
+    'onDrag' : {{ onDrag }},
+    'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
 })

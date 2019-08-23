@@ -19,33 +19,10 @@ DEFAULT_COLOR_MAP = [
 
 class Map(MapViz):
 
-    def __init__(self, 
-                 data=None, 
-                 id='Map',
-                 pickable=False,
-                 onHover=None,
-                 onClick=None,
-                 visible=True,
-                 opacity=1,
-                 frame_width = '100%',
-                 frame_height = '500px',
-                 *args, **kwargs):
+    def __init__(self, data=[], *args, **kwargs):
         super(Map, self).__init__(data, *args, **kwargs)
-        self.frame_width = frame_width
-        self.frame_height = frame_height
-
-        self.template = 'map'
-        self.defaultProps = {}
-
-        self.data = data
-        self.id = id
-        self.visible = visible
-        self.opacity = opacity
-        self.pickable = pickable
-        self.onHover = onHover
-        self.onClick = onClick
         self.layers = []
-
+        
     def add(self, layer):
         self.layers.append(layer)
 
@@ -59,7 +36,6 @@ class Map(MapViz):
             zoom=self.zoom,
             geojson_data=json.dumps(self.data, ensure_ascii=False),
             belowLayer=self.below_layer,
-            opacity=self.opacity,
             minzoom=self.min_zoom,
             maxzoom=self.max_zoom,
             pitch=self.pitch, 
@@ -77,14 +53,6 @@ class Map(MapViz):
             scalePosition=self.scale_position,
             scaleFillColor=self.scale_background_color,
             scaleTextColor=self.scale_text_color,
-
-            # DeckGL options.
-            data = self.data,
-            id = self.id,
-            visible = self.visible,
-            pickable = self.pickable,
-            onHover = self.onHover,
-            onClick = self.onClick,
         )
     
     def as_iframe(self, html_data):
@@ -93,18 +61,19 @@ class Map(MapViz):
                 'height: {height};"></iframe>'.format(
                     div_id=self.div_id,
                     srcdoc=srcdoc,
-                    width=self.frame_width,
-                    height=self.frame_height
+                    width=self.width,
+                    height=self.height
                 ))
 
     def make_str(self, options):
         for k, v in options.items():
             if isinstance(v, str):
-                options[k] = "'{}'".format(v)
+                if '=>' not in v:
+                    options[k] = "'{}'".format(v)
             elif isinstance(v, bool):
                 options[k] = json.dumps(v)
             elif v is None:
-                options[k] = json.dumps('null')
+                options[k] = json.dumps(v)
         return options
 
     def create_html(self, filename=None):
@@ -112,12 +81,13 @@ class Map(MapViz):
         # Create layer html
         layer_html = ''
         for layer in self.layers:
-            options = layer.get_options()
-            options = self.make_str(options)
-            html = templates.format(layer.template, **options)
+            layer_options = layer.get_options()
+            layer_options = self.make_str(layer_options)
+            html = templates.format(layer.template, **layer_options)
             layer_html += html + ','
 
         # Create base html
+        # Get Map Option.
         options = self.get_options()
         options = self.make_str(options)
         options['layers'] = layer_html
@@ -134,20 +104,77 @@ class Map(MapViz):
         display(HTML(map_html))
 
 
-class ArcLayer(Map):
+class Base:
+    
+    def __init__(self,
+                 data=[], 
+                 id='',
+                 visible=True,
+                 opacity=0.8,
+                 pickable=False,
+                 onHover=None,
+                 onClick=None,
+                 onDragStart=None,
+                 onDrag=None,
+                 onDragEnd=None,
+                 highlightColor=[0, 0, 128, 128],
+                 highlightedObjectIndex=-1,
+                 autoHighlight=False,
+                 tooltip=None):
+        self.template = 'map'
+        self.defaultProps = {}
+
+        self.data = data
+        self.id = id
+        self.visible = visible
+        self.opacity = opacity
+        self.pickable = pickable
+        self.onHover = onHover
+        self.onClick = onClick
+        self.onDragStart = onDragStart
+        self.onDrag = onDrag
+        self.onDragEnd = onDragEnd
+        self.highlightColor = highlightColor
+        self.highlightedObjectIndex = highlightedObjectIndex
+        self.autoHighlight = autoHighlight
+        self.tooltip=tooltip
+
+    def get_options(self):
+        return dict(
+            data = self.data,
+            id = self.id,
+            visible = self.visible,
+            opacity = self.opacity,
+            pickable = self.pickable,
+            onHover = self.onHover,
+            onClick = self.onClick,
+            onDragStart = self.onDragStart,
+            onDrag = self.onDrag,
+            onDragEnd = self.onDragEnd,
+            highlightColor = self.highlightColor,
+            highlightedObjectIndex = self.highlightedObjectIndex,
+            autoHighlight = self.autoHighlight,
+            tooltip = self.tooltip
+        )
+
+class ArcLayer(Base):
     
     def __init__(self, 
                  data,
                  id='ArcLayer',
                  source_color=[0, 0, 0, 255],
                  target_color=[0, 0, 0, 255],
-                 width=1,
                  widthUnits='pixels',
                  widthScale=1,
                  widthMinPixels=0,
                  widthMaxPixels=MAX_SAFE_INTEGER,
-                 height=1,
-                 tilt=0,
+                 getSourcePosition='object => object.sourcePosition',
+                 getTargetPosition='object => object.targetPosition',
+                 getSourceColor=[0, 0, 0, 255],
+                 getTargetColor=[0, 0, 0, 255],
+                 getWidth=1,
+                 getHeight=1,
+                 getTilt=0,
                  *args, 
                  **kwargs):
         super(ArcLayer, self).__init__(data, id, *args, **kwargs)
@@ -155,35 +182,38 @@ class ArcLayer(Map):
         self.template = 'ArcLayer'
         self.source_color = source_color
         self.target_color = target_color
-        self.width = width
         self.widthUnits = widthUnits
         self.widthScale = widthScale
         self.widthMinPixels = widthMinPixels
         self.widthMaxPixels = widthMaxPixels
-        self.height = height
-        self.tilt = tilt
+        self.getSourcePosition = getSourcePosition
+        self.getTargetPosition = getTargetPosition
+        self.getSourceColor = getSourceColor
+        self.getTargetColor = getTargetColor
+        self.getWidth = getWidth
+        self.getHeight = getHeight
+        self.getTilt = getTilt
 
     def get_options(self):
-        return dict(
-            data=self.data,
-            id=self.id,
-            source_color=self.source_color,
-            target_color=self.target_color,
-            width=self.width,
+        return dict(super().get_options(), **dict(
             widthUnits=self.widthUnits,
             widthScale=self.widthScale,
             widthMinPixels=self.widthMinPixels,
             widthMaxPixels=self.widthMaxPixels,
-            height=self.height,
-            tilt=self.tilt
-        )  
+            getSourcePosition=self.getSourcePosition,
+            getTargetPosition=self.getTargetPosition,
+            getSourceColor=self.getSourceColor,
+            getTargetColor=self.getTargetColor,
+            getWidth=self.getWidth, 
+            getHeight=self.getHeight,
+            getTilt=self.getTilt,
+        ))
 
-class PathLayer(Map):
+class PathLayer(Base):
     
     def __init__(self, 
                  data,
                  id='PathLayer',
-                 width=1,
                  widthUnits=1,
                  widthScale=1,
                  widthMinPixels=0,
@@ -192,13 +222,15 @@ class PathLayer(Map):
                  billboard=False,
                  miterLimit=4,
                  dashJustified=False,
-                 tooltip='object.name',
+                 getPath='object => object.path',
+                 getColor=[0, 0, 0, 255],
+                 getWidth=1,
+                 getDashArray=None,
                  *args, 
                  **kwargs):
         super(PathLayer, self).__init__(data, id, *args, **kwargs)
 
         self.template = 'PathLayer'
-        self.width = width
         self.widthUnits = widthUnits
         self.widthScale = widthScale
         self.widthMinPixels = widthMinPixels
@@ -207,13 +239,13 @@ class PathLayer(Map):
         self.billboard = billboard
         self.miterLimit = miterLimit
         self.dashJustified = dashJustified
-        self.tooltip = tooltip
+        self.getPath=getPath
+        self.getColor=getColor
+        self.getWidth=getWidth
+        self.getDashArray=getDashArray
 
     def get_options(self):
-        return dict(
-            data=self.data,
-            id=self.id,
-            width=self.width,
+        return dict(super().get_options(), **dict(
             widthUnits=self.widthUnits,
             widthScale=self.widthScale,
             widthMinPixels=self.widthMinPixels,
@@ -222,17 +254,17 @@ class PathLayer(Map):
             billboard=self.billboard,
             miterLimit=self.miterLimit,
             dashJustified=self.dashJustified,
-            tooltip=self.tooltip
-        )
+            getPath=self.getPath,
+            getColor=self.getColor,
+            getWidth=self.getWidth,
+            getDashArray=self.getDashArray
+        ))
 
 class TripsLayer(PathLayer):
     
     def __init__(self, 
                  data,
                  id='TripsLayer',
-                 currentTime=0,
-                 trailLength=120,
-                 width=1,
                  widthUnits=1,
                  widthScale=1,
                  widthMinPixels=0,
@@ -241,20 +273,28 @@ class TripsLayer(PathLayer):
                  billboard=False,
                  miterLimit=4,
                  dashJustified=False,
-                 tooltip='object.name',
+                 getPath='object => object.path',
+                 getColor=[0, 0, 0, 255],
+                 getWidth=1,
+                 getDashArray=None,
+                 currentTime=0,
+                 trailLength=120,
                  *args, 
                  **kwargs):
-        super(TripsLayer, self).__init__(data, 
-                                        id=id,
-                                        width=width,
-                                        widthUnits=widthUnits,
-                                        widthScale=widthScale,
-                                        widthMinPixels=widthMinPixels,
-                                        widthMaxPixels=widthMaxPixels,
-                                        rounded=rounded,
-                                        billboard=billboard,
-                                        miterLimit=miterLimit,
-                                        dashJustified=dashJustified,
+        super(TripsLayer, self).__init__(data,
+                                        id,
+                                        widthUnits,
+                                        widthScale,
+                                        widthMinPixels,
+                                        widthMaxPixels,
+                                        rounded,
+                                        billboard,
+                                        miterLimit,
+                                        dashJustified,
+                                        getPath,
+                                        getColor,
+                                        getWidth,
+                                        getDashArray,
                                         *args, **kwargs)
 
         self.template = 'TripsLayer'
@@ -262,19 +302,17 @@ class TripsLayer(PathLayer):
         self.trailLength = trailLength
 
     def get_options(self):
-        options = super().get_options()
-        options.update(
+        return dict(super().get_options(), **dict(
             currentTime = self.currentTime,
             trailLength = self.trailLength
-        )
-        return options
+        ))
 
-class ScatterplotLayer(Map):
+
+class ScatterplotLayer(Base):
 
     def __init__(self, 
                  data, 
-                 id='ScatterplotLayer', 
-                 radius=10,
+                 id='ScatterplotLayer',
                  radiusScale=1,
                  lineWidthUnits='meters',
                  lineWdithScale=1,
@@ -284,14 +322,17 @@ class ScatterplotLayer(Map):
                  radiusMaxPixels=0,
                  lineWidthMinPixels=0,
                  lineWidthMaxPixels=MAX_SAFE_INTEGER,
+                 getPosition='object => object.position',
+                 getRadius=1,
+                 getColor=[0, 0, 0, 255],
                  getFillColor=[255, 140, 0],
                  getLineColor=[0, 0, 0],
+                 getLineWidth=1,
                  *args, 
                  **kwargs):
         super(ScatterplotLayer, self).__init__(data, id, *args, **kwargs)
+        
         self.template = 'ScatterplotLayer'
-
-        self.radius = radius
         self.radiusScale = radiusScale
         self.lineWidthUnits = lineWidthUnits
         self.lineWdithScale = lineWdithScale
@@ -301,14 +342,15 @@ class ScatterplotLayer(Map):
         self.radiusMaxPixels = radiusMaxPixels
         self.lineWidthMinPixels = lineWidthMinPixels
         self.lineWidthMaxPixels = lineWidthMaxPixels
+        self.getPosition = getPosition
+        self.getRadius = getRadius
+        self.getColor = getColor
         self.getFillColor = getFillColor
         self.getLineColor = getLineColor
+        self.getLineWidth = getLineWidth
 
     def get_options(self):
-        return dict(
-            data=self.data,
-            id=self.id,
-            radius=self.radius,
+        return dict(super().get_options(), **dict(
             radiusScale=self.radiusScale,
             lineWidthUnits=self.lineWidthUnits,
             lineWdithScale=self.lineWdithScale,
@@ -318,11 +360,15 @@ class ScatterplotLayer(Map):
             radiusMaxPixels=self.radiusMaxPixels,
             lineWidthMinPixels=self.lineWidthMinPixels,
             lineWidthMaxPixels=self.lineWidthMaxPixels,
+            getPosition=self.getPosition,
+            getRadius=self.getRadius,
+            getColor=self.getColor,
             getFillColor=self.getFillColor,
-            getLineColor=self.getLineColor
-        )  
+            getLineColor=self.getLineColor,
+            getLineWidth=self.getLineWidth
+        ))
 
-class GridCellLayer(Map):
+class GridCellLayer(Base):
 
     def __init__(self, 
                  data, 
@@ -331,27 +377,35 @@ class GridCellLayer(Map):
                  coverage=1,
                  elevationScale=1,
                  extruded=True,
+                 getPosition='x => x.position',
+                 getColor=[255, 0, 255, 255],
+                 getElevation=1000,
                  *args, 
                  **kwargs):
         super(GridCellLayer, self).__init__(data, id, *args, **kwargs)
+        
         self.template = 'GridCellLayer'
-
         self.cellSize=cellSize
         self.coverage=coverage
         self.elevationScale=elevationScale
         self.extruded=extruded
+        self.getPosition=getPosition
+        self.getColor=getColor
+        self.getElevation=getElevation
 
     def get_options(self):
-        return dict(
-            data=self.data,
-            id=self.id,
+        return dict(super().get_options(), **dict(
             cellSize=self.cellSize,
             coverage=self.coverage,
             elevationScale=self.elevationScale,
             extruded=self.extruded,
-        )  
+            getPosition=self.getPosition,
+            getColor=self.getColor,
+            getElevation=self.getElevation
+        ))
 
-class CPUGridLayer(Map):
+
+class CPUGridLayer(Base):
 
     def __init__(self, 
                  data, 
@@ -381,9 +435,7 @@ class CPUGridLayer(Map):
         self.gpuAggregation=gpuAggregation  
 
     def get_options(self):
-        return dict(
-            data=self.data,
-            id=self.id,
+        return dict(super().get_options(), **dict(
             cellSize=self.cellSize,
             colorRange=self.colorRange,
             coverage=self.coverage,
@@ -393,4 +445,4 @@ class CPUGridLayer(Map):
             extruded=self.extruded,
             fp64=self.fp64,
             gpuAggregation=self.gpuAggregation  
-        )  
+        ))
