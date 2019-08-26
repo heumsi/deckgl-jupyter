@@ -3,7 +3,7 @@ import json
 
 from IPython.core.display import HTML, display
 
-import templates
+from . import templates
 from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
