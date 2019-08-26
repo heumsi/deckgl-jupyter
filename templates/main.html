@@ -2,7 +2,7 @@
 
 <head>
     <script src="https://unpkg.com/deck.gl@~7.0.0/dist.min.js"></script>
-    
+
     <!-- only if base map is needed -->
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
@@ -17,17 +17,48 @@
             width: 100vw;
             height: 100vh;
         }
+
+        #tooltip {
+            position: absolute; 
+            z-index: 1; 
+            pointer-events: none;
+            background-color: white;
+            border-radius: 10%;
+            padding: 10px;
+            font-size:12px;
+        }
     </style>
 </head>
 
 <body>
     <div id="container"></div>
+    <canvas id="deck-canvas"></canvas>
+    <div id="tooltip" id="tooltip"></div>
 </body>
 
 <script type="text/javascript">
-    {% include 'format-utils.js' %} 
+    {% include 'format-utils.js' %}
+
     {% block javascript %}
     {% endblock javascript %}
+
+    function setTooltip(object, x, y, tooltip) {
+        const el = document.getElementById('tooltip');
+
+        if (object) {
+            str_tooltip = '';
+            for (var i in tooltip) {
+                item = tooltip[i]
+                str_tooltip += item + ": " + object[item] + '\n'
+            }
+            el.innerHTML = str_tooltip
+            el.style.display = 'block';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+        } else {
+            el.style.display = 'none';
+        }
+    }
 </script>
 
 

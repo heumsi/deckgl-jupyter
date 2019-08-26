@@ -22,9 +22,7 @@ new deck.TripsLayer({
     'visible' : {{ visible }},
     'opacity' : {{ opacity }},
     'pickable' : {{ pickable }},
-    'onHover': ({object, x, y}) => {
-        const tooltip = {{ tooltip }}
-    },
+    'onHover': info => setTooltip(info.object, info.x, info.y, {{ tooltip }}),
     //'onClick' : {{ onClick }},
     //'onDragStart' : {{ onDragStart }},
     //'onDrag' : {{ onDrag }},
