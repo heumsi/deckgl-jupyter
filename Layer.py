@@ -65,10 +65,20 @@ class Map(MapViz):
                     height=self.height
                 ))
 
+    def is_js_syntax(self, option):
+        js_syntax = ['=>', 'new']
+        for i in js_syntax:
+            if i in option:
+                return True
+        return False
+        
+
     def make_str(self, options):
         for k, v in options.items():
             if isinstance(v, str):
-                if '=>' not in v:
+                if self.is_js_syntax(v):
+                    continue
+                elif '=>' not in v:
                     options[k] = "'{}'".format(v)
             elif isinstance(v, bool):
                 options[k] = json.dumps(v)
@@ -405,44 +415,83 @@ class GridCellLayer(Base):
         ))
 
 
-class CPUGridLayer(Base):
+class GridLayer(Base):
 
     def __init__(self, 
                  data, 
-                 id='CPUGridLayer', 
+                 id='GridLayer', 
                  cellSize=1000,
+                 colorDomain='[min(count), max(count)]',
                  colorRange=DEFAULT_COLOR_MAP,
                  coverage=1,
-                 elevationDomain=None,
+                 elevationDomain='[0, max(count)]',
                  elevationRange=[0, 1000],
                  elevationScale=1,
                  extruded=True,
-                 fp64=False,
-                 gpuAggregation=True,  
+                 upperPercentile=100,
+                 lowerPercentile=0,
+                 elevationUpperPercentile=100,
+                 elevationLowerPercentile=100,
+                 material='new PhongMaterial()',
+                 getPosition='object => object.position',
+                 getColorValue='points => points.length',
+                 getColorWeight='point => 1',
+                 colorAggregation='SUM',
+                 getElevationValue='points => points.length',
+                 getElevationWeight='point => 1',
+                 elevationAggregation='SUM',
+                 onSetColorDomain='() => {}',
+                 onSetElevationDomain='() => {}',
                  *args, 
                  **kwargs):
-        super(CPUGridLayer, self).__init__(data, id, *args, **kwargs)
-        self.template = 'CPUGridLayer'
+        super(GridLayer, self).__init__(data, id, *args, **kwargs)
+        self.template = 'GridLayer'
 
         self.cellSize=cellSize
+        self.colorDomain=colorDomain
         self.colorRange=colorRange
         self.coverage=coverage
         self.elevationDomain=elevationDomain
         self.elevationRange=elevationRange
         self.elevationScale=elevationScale
         self.extruded=extruded
-        self.fp64=fp64
-        self.gpuAggregation=gpuAggregation  
+        self.upperPercentile=100
+        self.lowerPercentile=0
+        self.elevationUpperPercentile=100
+        self.elevationLowerPercentile=100
+        self.material=material
+        self.getPosition=getPosition
+        self.getColorValue=getColorValue
+        self.getColorWeight=getColorWeight
+        self.colorAggregation=colorAggregation
+        self.getElevationValue=getElevationValue
+        self.getElevationWeight=getElevationWeight
+        self.elevationAggregation=elevationAggregation
+        self.onSetColorDomain=onSetColorDomain
+        self.onSetElevationDomain=onSetElevationDomain
 
     def get_options(self):
         return dict(super().get_options(), **dict(
             cellSize=self.cellSize,
+            colorDomain=self.colorDomain,
             colorRange=self.colorRange,
             coverage=self.coverage,
             elevationDomain=self.elevationDomain,
             elevationRange=self.elevationRange,
             elevationScale=self.elevationScale,
             extruded=self.extruded,
-            fp64=self.fp64,
-            gpuAggregation=self.gpuAggregation  
+            upperPercentile=self.upperPercentile,
+            lowerPercentile=self.lowerPercentile,
+            elevationUpperPercentile=self.elevationUpperPercentile,
+            elevationLowerPercentile=self.elevationLowerPercentile,
+            material=self.material,
+            getPosition=self.getPosition,
+            getColorValue=self.getColorValue,
+            getColorWeight=self.getColorWeight,
+            colorAggregation=self.colorAggregation,
+            getElevationValue=self.getElevationValue,
+            getElevationWeight=self.getElevationWeight,
+            elevationAggregation= self.elevationAggregation,
+            onSetColorDomain=self.onSetColorDomain,
+            onSetElevationDomain=self.onSetElevationDomain
         ))
