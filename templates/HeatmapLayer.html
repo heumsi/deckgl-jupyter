@@ -1,0 +1,24 @@
+new deck.HeatmapLayer({
+    // HeatmapLayer Added.
+    radiusPixels: {{ radiusPixels }},
+    colorRange: {{ colorRange }},
+    intensity: {{ intensity }},
+    threshold: {{ threshold }},
+    getPosition: {{ getPosition }},
+    getWeight: {{ getWeight }},
+
+    // MapLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': info => setTooltip(info.object, info.x, info.y, {{ tooltip }}),
+    'onClick' : {{ onClick }},
+    'onDragStart' : {{ onDragStart }},
+    'onDrag' : {{ onDrag }},
+    'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
+})

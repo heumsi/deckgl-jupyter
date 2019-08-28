@@ -415,6 +415,40 @@ class GridCellLayer(Base):
         ))
 
 
+class HeatmapLayer(Base):
+
+    def __init__(self, 
+                 data, 
+                 id='HeatmapLayer', 
+                 radiusPixels=30,
+                 colorRange=DEFAULT_COLOR_MAP,
+                 intensity=1,
+                 threshold=0.05,
+                 getPosition='object => object.position',
+                 getWeight=1,
+                 *args, 
+                 **kwargs):
+        super(HeatmapLayer, self).__init__(data, id, *args, **kwargs)
+        
+        self.template = 'HeatmapLayer'
+        self.radiusPixels=radiusPixels
+        self.colorRange=colorRange
+        self.intensity=intensity
+        self.threshold=threshold
+        self.getPosition=getPosition
+        self.getWeight=getWeight
+
+    def get_options(self):
+        return dict(super().get_options(), **dict(
+            radiusPixels=self.radiusPixels,
+            colorRange=self.colorRange,
+            intensity=self.intensity,
+            threshold=self.threshold,
+            getPosition=self.getPosition,
+            getWeight=self.getWeight,
+        ))
+
+# need to be updated.
 class GridLayer(Base):
 
     def __init__(self, 
