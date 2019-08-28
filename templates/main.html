@@ -1,11 +1,10 @@
 <html>
 
 <head>
-    <script src="https://unpkg.com/deck.gl@~7.2.0/dist.min.js"></script>
-
-    <!-- only if base map is needed -->
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js"></script>
-    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/deck.gl@7.2.0/dist.min.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js'></script>
 
     <style type="text/css">
         body {
@@ -32,7 +31,6 @@
 
 <body>
     <div id="container"></div>
-    <canvas id="deck-canvas"></canvas>
     <div id="tooltip" id="tooltip"></div>
 </body>
 

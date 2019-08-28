@@ -1,9 +1,12 @@
 import os
+import sys
 import json
 
 from IPython.core.display import HTML, display
 
-from . import templates
+sys.path.append(os.getcwd())
+
+import templates
 from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
@@ -86,21 +89,22 @@ class Map(MapViz):
                 options[k] = json.dumps(v)
         return options
 
-    def create_html(self, filename=None):
+    def create_html(self, buildings=False, filename=None):
 
         # Create layer html
-        layer_html = ''
+        layers = []
         for layer in self.layers:
             layer_options = layer.get_options()
             layer_options = self.make_str(layer_options)
             html = templates.format(layer.template, **layer_options)
-            layer_html += html + ','
+            layers.append(html)
 
         # Create base html
         # Get Map Option.
         options = self.get_options()
         options = self.make_str(options)
-        options['layers'] = layer_html
+        options['layers'] = layers
+        options['buildings'] = buildings
 
         html = templates.format(self.template, **options)
         return html
@@ -171,7 +175,7 @@ class ArcLayer(Base):
     
     def __init__(self, 
                  data,
-                 id='ArcLayer',
+                 id='deckgl-arc',
                  source_color=[0, 0, 0, 255],
                  target_color=[0, 0, 0, 255],
                  widthUnits='pixels',

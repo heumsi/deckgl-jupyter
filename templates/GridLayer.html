@@ -1,4 +1,7 @@
-new deck.GridLayer({
+{
+    type: GridLayer,
+
+    // ScatterplotLayer Added.
     cellSize: {{ cellSize }},
     //to be updated. colorDomain: {{ colorDomain }},
     colorRange: {{ colorRange }},
@@ -22,7 +25,7 @@ new deck.GridLayer({
     onSetColorDomain: {{ onSetColorDomain }},
     onSetElevationDomain: {{ onSetElevationDomain }},
 
-    // MapLayer (inherited)
+    // BaseLayer (inherited)
     'data' : {{ data }},
     'id' : {{ id }},
     'visible' : {{ visible }},
@@ -36,4 +39,4 @@ new deck.GridLayer({
     'highlightColor' : {{ highlightColor }}, 
     'highlightedObjectIndex' : {{ highlightedObjectIndex }},
     'autoHighlight' : {{ autoHighlight }}
-})
+}

@@ -1,4 +1,6 @@
-new deck.ScatterplotLayer({
+{
+    'type': ScatterplotLayer,
+
     // ScatterplotLayer Added.
     'radiusScale': {{ radiusScale }},
     'lineWidthUnits': {{ lineWidthUnits }},
@@ -16,7 +18,7 @@ new deck.ScatterplotLayer({
     'getLineColor': {{ getLineColor }},
     'getLineWidth': {{ getLineWidth }},
 
-    // MapLayer (inherited)
+    // BaseLayer (inherited)
     'data' : {{ data }},
     'id' : {{ id }},
     'visible' : {{ visible }},
@@ -30,5 +32,4 @@ new deck.ScatterplotLayer({
     'highlightColor' : {{ highlightColor }}, 
     'highlightedObjectIndex' : {{ highlightedObjectIndex }},
     'autoHighlight' : {{ autoHighlight }}
-})
-
+}

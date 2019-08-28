@@ -1,4 +1,6 @@
-new deck.ArcLayer({
+{
+    'type': ArcLayer,
+    
     // ArcLayer Added.
     'widthUnits': {{ widthUnits }},
     'widthScale': {{ widthScale }},
@@ -12,7 +14,7 @@ new deck.ArcLayer({
     'getHeight': {{ getHeight }},
     'getTilt': {{ getTilt }},
     
-    // MapLayer (inherited)
+    // BaseLayer (inherited)
     'data' : {{ data }},
     'id' : {{ id }},
     'visible' : {{ visible }},
@@ -26,5 +28,5 @@ new deck.ArcLayer({
     'highlightColor' : {{ highlightColor }}, 
     'highlightedObjectIndex' : {{ highlightedObjectIndex }},
     'autoHighlight' : {{ autoHighlight }}
-})
+}
 

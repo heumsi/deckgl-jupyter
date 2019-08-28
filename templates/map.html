@@ -2,17 +2,59 @@
 
 {% block map %}
 
-    const deckgl = new deck.DeckGL({
+    const {MapboxLayer} = deck;
+    mapboxgl.accessToken = {{ accessToken }};
 
+    const map = new mapboxgl.Map({
         container: 'container',
-        mapboxApiAccessToken: {{ accessToken }},
-        latitude: {{ center[0] }},
-        longitude: {{ center[1] }},
+        style: {{ style }},
+        center: {{ center }},
         zoom: {{ zoom }},
-        bearing: {{ bearing }},
         pitch: {{ pitch }},
-        mapStyle: {{ style }},
-        layers: [{{ layers }}]
-    })
+        bearing: {{ bearing }}
+    });
 
+    map.on('load', () => {
+            
+        {% if buildings %}
+            const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
+
+            map.addLayer({
+                'id': '3d-buildings',
+                'source': 'composite',
+                'source-layer': 'building',
+                'filter': ['==', 'extrude', 'true'],
+                'type': 'fill-extrusion',
+                'minzoom': 15,
+                'paint': {
+                    'fill-extrusion-color': '#aaa',
+
+                    // use an 'interpolate' expression to add a smooth transition effect to the
+                    // buildings as the user zooms in
+                    'fill-extrusion-height': [
+                        "interpolate", ["linear"], ["zoom"],
+                        15, 0,
+                        15.05, ["get", "height"]
+                    ],
+                    'fill-extrusion-base': [
+                        "interpolate", ["linear"], ["zoom"],
+                        15, 0,
+                        15.05, ["get", "min_height"]
+                    ],
+                    'fill-extrusion-opacity': .6
+                }
+                }, firstLabelLayerId);
+        {% endif %}
+        
+        {% for layer in layers %}
+            map.addLayer(new MapboxLayer(
+                {{ layer }}
+            ));
+        {% endfor %}
+    });
+
+    var language = new MapboxLanguage({
+        defaultLanguage: 'ko'
+    });
+    map.addControl(language);
 {% endblock map %}
