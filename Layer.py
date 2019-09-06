@@ -533,3 +533,72 @@ class GridLayer(Base):
             onSetColorDomain=self.onSetColorDomain,
             onSetElevationDomain=self.onSetElevationDomain
         ))
+
+class PolygonLayer(Base):
+
+    def __init__(self, 
+                 data, 
+                 id='PolygonLayer', 
+                 filled=True,
+                 stroked=False,
+                 extruded=False,
+                 wireframe=False,
+                 elevationScale=1,
+                 lineWidthUnits='meters',
+                 lineWidthScale=1,
+                 lineWidthMinPixels=0,
+                 lineWidthMaxPixels=MAX_SAFE_INTEGER,
+                 lineJointRounded=False,
+                 lineMiterLimit=4,
+                 lineDashJustified=False,
+                 getPolygon='object => object.polygon',
+                 getFillColor=[0, 0, 0, 255],
+                 getLineColor=[0, 0, 0, 255],
+                 getLineWidth=1,
+                 getElevation=1000,
+                 getLineDashArray=None,
+                 *args, 
+                 **kwargs):
+        super(PolygonLayer, self).__init__(data, id, *args, **kwargs)
+        
+        self.template = 'PolygonLayer'
+        self.filled=filled
+        self.stroked=stroked
+        self.extruded=extruded
+        self.wireframe=wireframe
+        self.elevationScale=elevationScale
+        self.lineWidthUnits=lineWidthUnits
+        self.lineWidthScale=lineWidthScale
+        self.lineWidthMinPixels=lineWidthMinPixels
+        self.lineWidthMaxPixels=lineWidthMaxPixels
+        self.lineJointRounded=lineJointRounded
+        self.lineMiterLimit=lineMiterLimit
+        self.lineDashJustified=lineDashJustified
+        self.getPolygon=getPolygon
+        self.getFillColor=getFillColor
+        self.getLineColor=getLineColor
+        self.getLineWidth=getLineWidth
+        self.getElevation=getElevation
+        self.getLineDashArray=getLineDashArray
+
+    def get_options(self):
+        return dict(super().get_options(), **dict(
+            filled=self.filled,
+            stroked=self.stroked,
+            extruded=self.extruded,
+            wireframe=self.wireframe,
+            elevationScale=self.elevationScale,
+            lineWidthUnits=self.lineWidthUnits,
+            lineWidthScale=self.lineWidthScale,
+            lineWidthMinPixels=self.lineWidthMinPixels,
+            lineWidthMaxPixels=self.lineWidthMaxPixels,
+            lineJointRounded=self.lineJointRounded,
+            lineMiterLimit=self.lineMiterLimit,
+            lineDashJustified=self.lineDashJustified,
+            getPolygon=self.getPolygon,
+            getFillColor=self.getFillColor,
+            getLineColor=self.getLineColor,
+            getLineWidth=self.getLineWidth,
+            getElevation=self.getElevation,
+            getLineDashArray=self.getLineDashArray
+        ))

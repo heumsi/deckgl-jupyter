@@ -1,0 +1,38 @@
+{
+    'type': PolygonLayer,
+
+    // PathLayer Added.
+    filled : {{ filled }},
+    stroked : {{ stroked }},
+    extruded : {{ extruded }},
+    wireframe : {{ wireframe }},
+    elevationScale : {{ elevationScale }},
+    lineWidthUnits : {{ lineWidthUnits }},
+    lineWidthScale : {{ lineWidthScale }},
+    lineWidthMinPixels : {{ lineWidthMinPixels }},
+    lineWidthMaxPixels : {{ lineWidthMaxPixels }},
+    lineJointRounded : {{ lineJointRounded }},
+    lineMiterLimit : {{ lineMiterLimit }},
+    lineDashJustified : {{ lineDashJustified }},
+    getPolygon : {{ getPolygon }},
+    getFillColor : {{ getFillColor }},
+    getLineColor : {{ getLineColor }},
+    getLineWidth : {{ getLineWidth }},
+    getElevation : {{ getElevation }},
+    getLineDashArray : {{ getLineDashArray }},
+
+    // BaseLayer (inherited)
+    'data' : {{ data }},
+    'id' : {{ id }},
+    'visible' : {{ visible }},
+    'opacity' : {{ opacity }},
+    'pickable' : {{ pickable }},
+    'onHover': info => setTooltip(info.object, info.x, info.y, {{ tooltip }}),
+    //'onClick' : {{ onClick }},
+    //'onDragStart' : {{ onDragStart }},
+    //'onDrag' : {{ onDrag }},
+    //'onDragEnd' : {{ onDragEnd }},
+    'highlightColor' : {{ highlightColor }}, 
+    'highlightedObjectIndex' : {{ highlightedObjectIndex }},
+    'autoHighlight' : {{ autoHighlight }}
+}
