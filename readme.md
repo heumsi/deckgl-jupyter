@@ -1,10 +1,10 @@
 ## Script Deckgl for Jupyter Notebook
 
-Deckgl-jupyter 는 위치 데이터 시각화 라이브러리인 Deck.gl 을 쥬피터 노트북 에서도 쓸 수 있게 만든 라이브러리 입니다. 
+Deckgl-jupyter 는 위치 데이터 시각화 라이브러리인 **Deck.gl 을 쥬피터 노트북 에서도 쓸 수 있게 만든 라이브러리** 입니다. 
 
 예를 들어, 쥬피터 노트북에서 아래와 같은 방법으로 사용가능합니다.
 
-![image-20190906164759155](/Users/heumsi/Library/Application Support/typora-user-images/image-20190906164759155.png)
+![image](https://user-images.githubusercontent.com/31306282/64415825-ff821180-d0d0-11e9-8ad8-83810977b767.png)
 
 
 
@@ -19,7 +19,7 @@ Deckgl-jupyter 는 위치 데이터 시각화 라이브러리인 Deck.gl 을 쥬
 - GridCell Layer
 - Heatmap Layer
 
-Heatmap Layer 의 경우, WebGL2 가 미설치된 브라우저 상황에 따라 작동하지 않을 수 있습니다.
+Heatmap Layer 의 경우, **WebGL2 가 미설치된 브라우저 상황에 따라 작동하지 않을 수 있습니다.**
 렌더링 부분은 전적으로 Deck.gl 버전을 따라가기에, Deck.gl 에서 해결되지 않은 이슈와 버그가 이 패키지에서도 존재할 수 있습니다.
 현재 적용하고 있는 Deck.gl 버전은 **deck.gl@7.2.0** 입니다.
 
@@ -27,10 +27,10 @@ Heatmap Layer 의 경우, WebGL2 가 미설치된 브라우저 상황에 따라 
 
 다음과 같은 특징이 있습니다.
 
-- Mapbox Basemap 을 사용합니다. 따라서, Mapbox Map 에 사용되는 파라미터들을 사용할 수 있습니다.
+- Mapbox Basemap 을 사용합니다. 따라서, **Mapbox Map 에 사용되는 파라미터들을 사용**할 수 있습니다.
 - Mapbox-gl-language 가 기본적으로 Add-on 되어있습니다. 
-  따라서, Basemap 언어가 지역에 따라 알아서 바뀝니다.
-- Mapboxgl_jupyter 의 경우, 하나의 맵에 여러 개의 Layer 쌓는 것이 불가능했습니다.
+  따라서, **Basemap 언어가 지역에 따라 알아서 바뀝니다.**
+- Mapboxgl_jupyter 의 경우, 하나의 맵에 여러 개의 **Layer 쌓는 것**이 불가능했습니다.
   하지만 이 패키지에서는 가능합니다.
 - 이 패키지는 Deck.gl의 기능들을 구현하되,
   코드는 Mapboxgl_jupyter 를 본 떠 만들었고,
@@ -38,7 +38,7 @@ Heatmap Layer 의 경우, WebGL2 가 미설치된 브라우저 상황에 따라 
 
 
 
-현재 Uber 팀에서 deck.gl 의 공식 python 패키지인 [pydeck](https://github.com/uber/deck.gl/tree/master/bindings/python/pydeck) 을 준비하고 있습니다만, 보다 가볍고 빠르게 사용하기 위해, 해당 패키지를 개발했습니다. 아무래도, pydeck 이 제대로 릴리즈 되기 전까지 임시로 deck.gl의 기능들을 사용해볼 수 있는 패키지가 될 듯 합니다.
+현재 Uber 팀에서 deck.gl 의 공식 python 패키지인 [pydeck](https://github.com/uber/deck.gl/tree/master/bindings/python/pydeck) 을 준비하고 있습니다만, 보다 가볍고 빠르게 사용하기 위해, 해당 패키지를 개발했습니다. 아무래도, pydeck 이 제대로 릴리즈 되기 전까지 **임시로 deck.gl의 기능들을 사용**해볼 수 있는 패키지가 될 듯 합니다.
 
 
 
@@ -54,7 +54,6 @@ pip install deckgl_jupyter
 git clone https://github.com/heumsi/deckgl_jupyter.git
 ...
 
-python setup.py build
 python setup.py install
 ```
 
