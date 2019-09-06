@@ -18,6 +18,6 @@ setup(
     zip_safe            = False,
     classifiers         = [
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License"
+        'License :: OSI Approved :: MIT License'
     ],
 )
