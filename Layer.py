@@ -176,8 +176,6 @@ class ArcLayer(Base):
     def __init__(self, 
                  data,
                  id='deckgl-arc',
-                 source_color=[0, 0, 0, 255],
-                 target_color=[0, 0, 0, 255],
                  widthUnits='pixels',
                  widthScale=1,
                  widthMinPixels=0,
@@ -194,8 +192,6 @@ class ArcLayer(Base):
         super(ArcLayer, self).__init__(data, id, *args, **kwargs)
 
         self.template = 'ArcLayer'
-        self.source_color = source_color
-        self.target_color = target_color
         self.widthUnits = widthUnits
         self.widthScale = widthScale
         self.widthMinPixels = widthMinPixels
