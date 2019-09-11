@@ -45,16 +45,13 @@ Heatmap Layer 의 경우, **WebGL2 가 미설치된 브라우저 상황에 따�
 ## Installation
 
 ```bash
-pip install deckgl_jupyter
+pip install deckgljupyter
 ```
 
-또는
+Examples 은 직접 git clone 통해 `Examples.ipynb` 을 확인해주세요.
 
 ```bash
-git clone https://github.com/heumsi/deckgl_jupyter.git
-...
-
-python setup.py install
+git clone https://github.com/heumsi/deckgljupyter.git
 ```
 
 
