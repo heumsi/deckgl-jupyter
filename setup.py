@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name                = 'deckgljupyter',
-    version             = '0.1.1.3',
+    version             = '0.1.1.4',
     license             = 'MIT',
     description         = 'Let deck.gl be created in jupyter notebook.',
     long_description    = open('readme.md').read(),
