@@ -4,9 +4,7 @@ import json
 
 from IPython.core.display import HTML, display
 
-sys.path.append(os.getcwd())
-
-import deckgljupyter.templates
+from deckgljupyter import templates
 from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
