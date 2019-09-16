@@ -6,7 +6,7 @@ from IPython.core.display import HTML, display
 
 sys.path.append(os.getcwd())
 
-import templates
+import deckgljupyter.templates
 from mapboxgl.viz import MapViz
 from mapboxgl.utils import *
 
