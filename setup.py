@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name                = 'deckgljupyter',
-    version             = '0.1.1.4',
+    version             = '0.1.1.8',
     license             = 'MIT',
     description         = 'Let deck.gl be created in jupyter notebook.',
     long_description    = open('readme.md').read(),
@@ -13,9 +13,10 @@ setup(
     download_url        = 'https://github.com/heumsi/deckgl-jupyter/archive/master.zip',
     install_requires    =  ['mapboxgl', 'jinja2', ],
     packages            = find_packages(exclude = []),
+    include_package_data = True,
     keywords            = ['deckgl', 'mapboxgl', 'location data', 'visualization'],
     python_requires     = '>=3',
-    package_data        = {},
+    #package_data        = {},
     zip_safe            = False,
     classifiers         = [
         'Programming Language :: Python :: 3',
